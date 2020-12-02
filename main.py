@@ -19,8 +19,6 @@ logo = '''
 
 '''
 
-#Auxiliar functions
-
 
 #Game level selector
 def game_level():
@@ -34,31 +32,25 @@ def game_level():
     else:
         return HARD_LEVEL_TURNS
 
-
-#Comaper guess if not equal and give hint
-def hint_guess(guess):
+#evaluate game conditions
+def check_game_conditions(guess):
     if guess > NUMBER:
         print("Too high.")
     elif guess < NUMBER:
         print("Too low.")
-
-
-def guess_it(turns):
-    guess = int(input("Make a guess: "))
-    if guess != NUMBER:
-        hint_guess(guess)
-        turns = turn_over(turns)
     else:
-        print(f"You guessed the number {NUMBER}!")
-        quit()
-    return turns
+        print(f"You found the number {NUMBER}")
+        return NUMBER
 
-
-#track turns
-def turn_over(turns):
-    print(f"You have {turns} attemps remaining to guess the number")
-    return turns
-
+#game_turn 
+def game_turn(attemps):
+    print(f"You have {attemps} remaining to guess the number.")
+    guess = int(input("Make a guess: "))
+    if check_game_conditions(guess) == NUMBER:
+        return NUMBER
+    else:
+        attemps -= 1
+        game_turn(attemps)
 
 #game function
 def guess_game():
@@ -66,9 +58,11 @@ def guess_game():
     print(logo)
     print("Welcome to the number guessing game!")
     print("I'm thinking of a number between 1 and 100")
-    turns = game_level()
-    while turns > 0:
-        turns = guess_it(turns)
+    attemps = game_level()
+    game_turn(attemps)
+        
 
+    if input("Play again ('y' or 'n'): ") == 'y':
+        guess_game()
 
 guess_game()
